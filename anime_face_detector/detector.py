@@ -5,7 +5,7 @@ import warnings
 from typing import Optional, Union
 
 import cv2
-import mmcv
+import mmengine
 import numpy as np
 import torch.nn as nn
 from mmdet.apis import inference_detector, init_detector
@@ -16,10 +16,10 @@ from mmpose.datasets import DatasetInfo
 class LandmarkDetector:
     def __init__(
             self,
-            landmark_detector_config_or_path: Union[mmcv.Config, str,
+            landmark_detector_config_or_path: Union[mmengine.Config, str,
                                                     pathlib.Path],
             landmark_detector_checkpoint_path: Union[str, pathlib.Path],
-            face_detector_config_or_path: Optional[Union[mmcv.Config, str,
+            face_detector_config_or_path: Optional[Union[mmengine.Config, str,
                                                          pathlib.Path]] = None,
             face_detector_checkpoint_path: Optional[Union[
                 str, pathlib.Path]] = None,
@@ -41,14 +41,14 @@ class LandmarkDetector:
 
     @staticmethod
     def _load_config(
-        config_or_path: Optional[Union[mmcv.Config, str, pathlib.Path]]
-    ) -> Optional[mmcv.Config]:
-        if config_or_path is None or isinstance(config_or_path, mmcv.Config):
+        config_or_path: Optional[Union[mmengine.Config, str, pathlib.Path]]
+    ) -> Optional[mmengine.Config]:
+        if config_or_path is None or isinstance(config_or_path, mmengine.Config):
             return config_or_path
-        return mmcv.Config.fromfile(config_or_path)
+        return mmengine.Config.fromfile(config_or_path)
 
     @staticmethod
-    def _init_pose_model(config: mmcv.Config,
+    def _init_pose_model(config: mmengine.Config,
                          checkpoint_path: Union[str, pathlib.Path],
                          device: str, flip_test: bool) -> nn.Module:
         if isinstance(checkpoint_path, pathlib.Path):
@@ -58,7 +58,7 @@ class LandmarkDetector:
         return model
 
     @staticmethod
-    def _init_face_detector(config: Optional[mmcv.Config],
+    def _init_face_detector(config: Optional[mmengine.Config],
                             checkpoint_path: Optional[Union[str,
                                                             pathlib.Path]],
                             device: str) -> Optional[nn.Module]:
